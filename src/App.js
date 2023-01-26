@@ -1,25 +1,43 @@
-import logo from './logo.svg';
+import Navbar from './Components/Navbar';
 import './App.css';
+import Home from './Components/Home';
+import { Routes, Route } from 'react-router-dom';
+import Entry from './Components/StudentD';
+import StudentD from './Components/StudentD';
+import ContactUs from './Components/ContactUs';
+import Update from './Components/CreateElement';
+import { useState } from 'react';
+import { createContext } from 'react';
 
+let ContextX = createContext()
 function App() {
+
+  let [DataX, updateData] = useState([])
+  let getData = (data) => {
+    DataX.push([...data])
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Navbar />
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='student' element={
+          <ContextX.Provider value={{ data: DataX, updateData: updateData }} >
+            <StudentD />
+          </ContextX.Provider>
+        } />
+        <Route path='/edit' element={
+          <ContextX.Provider value={{ data: DataX, updateData: updateData }}>
+            <Update />
+          </ContextX.Provider>
+        } />
+        <Route path='contact' element={<ContactUs />} />
+        <Route path='/Entry-Data' element={<Entry PropRes={getData}/>}/>
+      </Routes>
+    </>
   );
 }
 
 export default App;
+export{ContextX}
